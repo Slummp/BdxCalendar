@@ -1,6 +1,7 @@
 <?php
 require 'class.iCalReader.php';
 
+// initialisation des paramètres du GET si non-renseignés
 if(!(isset($_GET["filters"])))
     $_GET["filters"] = "";
 
@@ -20,11 +21,14 @@ if(!(isset($_GET["groupAlgo"])))
 if(!(isset($_GET["groupAS"])))
     $_GET["groupAS"] = 0;
 
+// Récupération du calendrier du groupe de TD depuis le site d'HackJack
 $ical = new ical('http://www.hackjack.info/et/' . $_GET["semester"] . '_A' . intval($_GET["group"]) . '/ical');
 
+// En-tête HTML spécifique au calendriers
 header('Content-type: text/calendar; charset=utf-8');
 header('Content-Disposition: inline; filename=calendar.ics');
 
+// Début du calendrier...
 echo 'BEGIN:VCALENDAR
 PRODID:-//HackJack//Emplois du temps BdxI//FR
 VERSION:2.0
@@ -36,6 +40,7 @@ X-PUBLISHED-TTL:PT1H
 
 foreach($ical->events() as $event)
 {
+    // Ajout au calendrier des événements correspondants au sous-groupes choisis
     switch ($event["SUMMARY"]) {
         case "TD BD (J1IN6013)":
             if(substr_compare($event["DESCRIPTION"], "GROUPE " . intval($_GET["groupBD"]), -8) == 0)
@@ -67,14 +72,17 @@ foreach($ical->events() as $event)
     }
 }
 
+// ...fin du calendrier
 echo 'END:VCALENDAR';
 
+// Filtrage des modules à exclure
 function filter($event)
 {
     $filters = explode(",", $_GET["filters"]);
     return !in_array(substr($event["SUMMARY"], -9, -1), $filters);
 }
 
+// Ajout d'un événement au calendrier
 function addEvent($event)
 {
     if(filter($event))
@@ -87,7 +95,8 @@ function addEvent($event)
         echo 'END:VEVENT' . "\n";
     }
 }
-               
+
+// Fonction de test...
 function test($event)
 {
     if(filter($event))

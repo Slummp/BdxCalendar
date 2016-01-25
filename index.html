@@ -1,27 +1,34 @@
-<!--
-    TODO :
-        - references à hackjack, le site de l'UBDX et à BenjX (?)
--->
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- Métas-datas -->
         <meta charset="UTF-8">
-        <link rel="shortcut icon" href="images/favicon.png">
+        
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="images/favicon.png" />
+        
+        <!-- CSS -->
         <link rel="stylesheet" href="css/bootstrap.min.css" />
+        
+        <!-- JS -->
         <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
-        <script src="js/clipboard.min.js"></script>
+        <script type="text/javascript" src="js/clipboard.min.js"></script>
+        
+        <!-- Titre -->
         <title>Emploi du temps - Génerateur de lien ICS - Université Bordeaux - Licence Informatique</title>
     </head>
-    <body onload="">
+    <body>
         <div id="params" class="container auth">
+            <!-- Titre du formulaire -->
             <h1 class="text-center">Générateur de lien pour agenda</h1>
             
+            <!-- Erreurs -->
             <div id="errors">
                 <!--        -->
             </div>
             
+            <!-- Formulaire -->
             <div id="big-form" class="well auth-box">
                 <form>
                     <fieldset>
@@ -60,6 +67,7 @@
                             </div>
                         </div>
 
+                        <!-- Sous-groupes spécifiques au S6 -->
                         <div id="divSousGroupes" style="display: none;">
 
                             <!-- Multiple Radios (inline) Groupe BD -->
@@ -114,6 +122,8 @@
                             <label class=" control-label" for="inputResultat">URL calendrier</label>  
                             <div class="input-group">
                                 <input id="inputResultat" name="textinput" value="http://www.slummp.esy.es/calendar.php" class="form-control input-md" type="text" readonly>
+                                
+                                <!-- Bouton de copie -->
                                 <span class="input-group-btn">
                                     <button id="copyButton" class="btn btn-default" type="button" data-clipboard-demo data-clipboard-target="#inputResultat" title="Copier vers le presse-papier" alt="Copier">
                                         <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
@@ -129,93 +139,192 @@
                 </form>
             </div>
         
-            <div style="width: 100%; text-align: right; font-style: italic; color: #CCCCCC;">Données provenant de <a style=";" href="http://hackjack.info/et/">HackJack</a></div>
+            <!-- Référence à HackJack -->
+            <div style="width: 100%; text-align: right; font-style: italic; color: #CCCCCC;">
+                Données provenant de <a style=";" href="http://hackjack.info/et/">HackJack</a>
+            </div>
             
             <div class="clearfix"></div>
         </div>
 
+        <!-- JS -->
         <script type="text/javascript">
+            // Objet Clipboard pour gérer la copie
             var clipboard = new Clipboard('#copyButton');
             
+            // Gestion des erreurs
             document.getElementById("copyButton").onclick=function(){
+                // Semestre invalide
                 if(document.getElementById("contentModules").innerHTML == "error")
                 {
-                    document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                            '<span aria-hidden="true">×</span>' +
-                        '</button>' +
-                        '<strong>Attention !</strong> Veuillez choisir un semestre en cours.' +
-                    '</div>';
+                    var span1 = document.createElement("span");
+                    
+                    var strong1 = document.createElement("strong");
+                    strong1.innerHTML = "Attention !";
+
+                    span1.appendChild(strong1);
+                    span1.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
+                    
+                    erreur('danger', span1);
                 }
+                
+                // Semestre non sélectionné
                 else if(document.getElementById("selectSemestre").value == "")
                 {
-                    document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                            '<span aria-hidden="true">×</span>' +
-                        '</button>' +
-                        '<strong>Attention !</strong> Vous avez oublié de sélectionner un semestre.' +
-                    '</div>';
+                    var span2 = document.createElement("span");
+                    
+                    var strong2 = document.createElement("strong");
+                    strong2.innerHTML = "Attention !";
+
+                    span2.appendChild(strong2);
+                    span2.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un semestre.'));
+                    
+                    erreur('danger', span2);
                 }
+                
+                // Groupe non sélectionné
                 else if(document.getElementById("selectGroupe").value == "")
                 {
-                    document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                            '<span aria-hidden="true">×</span>' +
-                        '</button>' +
-                        '<strong>Attention !</strong> Vous avez oublié de sélectionner un groupe de TD.' +
-                    '</div>';
+                    var span3 = document.createElement("span");
+                    
+                    var strong3 = document.createElement("strong");
+                    strong3.innerHTML = "Attention !";
+
+                    span3.appendChild(strong3);
+                    span3.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un groupe de TD.'));
+                    
+                    erreur('danger', span3);
                 }
+                
+                // Copie...
                 else
                 {
+                    // ...réussie
                     clipboard.on('success', function(e) {
-                        document.getElementById("errors").innerHTML = '<div class="alert alert-success alert-dismissible fade in" role="alert">' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                '<span aria-hidden="true">×</span>' +
-                            '</button>' +
-                            'Url du calendrier copiée dans le presse-papier.' +
-                        '</div>';
+                        var span4 = document.createElement("span");
+
+                        span4.appendChild(document.createTextNode(' Url du calendrier copiée dans le presse-papier.'));
+
+                        erreur('success', span4);
                     });
             
+                    // ...échouée
                     clipboard.on('error', function(e) {
-                        document.getElementById("errors").innerHTML = '<div class="alert alert-warning alert-dismissible fade in" role="alert">' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                '<span aria-hidden="true">×</span>' +
-                            '</button>' +
-                            '<strong>Attention !</strong> La copie n\'a pas fonctionnée, l\'URL n\'a pas été copiée dans le presse-papier.' +
-                        '</div>';
+                        var span5 = document.createElement("span");
+
+                        var strong5 = document.createElement("strong");
+                        strong5.innerHTML = "Attention !";
+
+                        span5.appendChild(strong5);
+                        span5.appendChild(document.createTextNode(' La copie n\'a pas fonctionnée, l\'URL n\'a pas été copiée dans le presse-papier.'));
+
+                        erreur('warning', span5);                        
                     });
                 }
             };
+            
+            // Affichage d'un message d'erreur (type = {danger, warning, info, success})
+            function erreur(type, message)
+            {
+                // Nettoyage de la div d'erreurs
+                document.getElementById("errors").innerHTML = '';
+                
+                var error = document.createElement("div");
+                error.setAttribute("class", "alert alert-" + type + " alert-dismissible fade in");
+                error.setAttribute("role", "alert");
 
+                var button = document.createElement("button");
+                button.setAttribute("class", "close");
+                button.setAttribute("type", "button");
+                button.setAttribute("data-dismiss", "alert");
+                button.setAttribute("aria-label", "Close");
+
+                var span = document.createElement("span");
+                span.setAttribute("aria-hidden", "true");
+                span.innerHTML = "x";
+                
+                //
+
+                document.getElementById("errors").appendChild(error);
+                error.appendChild(button);
+                button.appendChild(span);
+                error.appendChild(message);
+            }
+
+            // Récupération de la liste des modules
             $('#selectSemestre').change(function() {
+                // Récupération du code du module
                 var sem = document.getElementById("selectSemestre").value;
+                
+                // Récupération de la liste des modules en AJAX
                 $.post("modules.php", { semester: sem }, function(data) {
+                    // Si le semestre n'est pas valide
                     if(data == "error")
                     {
-                        document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                '<span aria-hidden="true">×</span>' +
-                            '</button>' +
-                            '<strong>Attention !</strong> Veuillez choisir un semestre en cours.' +
-                        '</div>';
+                        // Afficher l'erreur correspondante
+                        var span1 = document.createElement("span");
+                    
+                        var strong1 = document.createElement("strong");
+                        strong1.innerHTML = "Attention !";
+
+                        span1.appendChild(strong1);
+                        span1.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
+
+                        erreur('danger', span1);
+                        
                         document.getElementById("divModules").style.display = 'none';
                     }
+                    
+                    // Si le semestre est valide
                     else
                     {
+                        // Nettoyage de la div d'erreurs et de la liste des modules
                         document.getElementById("errors").innerHTML = '';
+                        document.getElementById('contentModules').innerHTML = '';
+                        
+                        // Afficahge de la div contenant la liste des modules
                         document.getElementById("divModules").style.display = 'block';
+                        
+                        // Création du contenu de la liste des modules
+                        var dataParse = JSON.parse(data);
+                        
+                        for(var key in dataParse) {
+                            var checkboxDiv = document.createElement("div");
+                            checkboxDiv.setAttribute("class", "checkbox");
+                            
+                            var checkboxLabel = document.createElement("label");
+                            checkboxLabel.setAttribute("for", "checkboxes-" + key);
+                            
+                            var checkboxInput = document.createElement("input");
+                            checkboxInput.setAttribute("id", "checkboxes-" + key);
+                            checkboxInput.setAttribute("name", "modules[]");
+                            checkboxInput.setAttribute("type", "checkbox");
+                            checkboxInput.setAttribute("value", key);
+                            
+                            //
+                            
+                            document.getElementById("contentModules").appendChild(checkboxDiv);
+                            checkboxDiv.appendChild(checkboxLabel);
+                            checkboxLabel.appendChild(checkboxInput);
+                            checkboxLabel.appendChild(document.createTextNode(dataParse[key]));
+                        }
                     }
-                    $('#contentModules').html(data);
                 });
             });
             
+            // Génération de l'URL du calendrier en fonction des paramètres du formulaire
             document.getElementById("params").addEventListener("change", function (e) {
+                // Récupération de l'input contenant le résultat
                 var result = document.getElementById("inputResultat");
+                
+                // Base de l'URL
                 result.value = "http://www.slummp.esy.es/calendar.php?";
 
+                // Ajout du paramètre semestre
                 result.value += "semester=";
                 result.value += document.getElementById("selectSemestre").value;
 
+                // Ajout du paramètre groupe de TD (si précisé)
                 if(document.getElementById("selectGroupe").value != "")
                 {
                     result.value += "&";
@@ -224,6 +333,7 @@
                     result.value += document.getElementById("selectGroupe").value;
                 }
 
+                // Ajout du paramètre filtres
                 result.value += "&";
 
                 result.value += "filters=";
@@ -236,13 +346,22 @@
                     }
                 }
                 
+                // Suppresion de la virgule de fin inutile
                 if(result.value.charAt(result.value.length-1) != "=")
+                {
                     result.value = result.value.substring(0,result.value.length-1);
+                }
+                
+                // Suppression du paramètre inutile (parce que vide..)
                 else
+                {
                     result.value = result.value.substring(0,result.value.length-9);
+                }
 
+                // Affichage des sous-groupes spécifiques au S6
                 if(document.getElementById("selectSemestre").value == "IN601")
                 {
+                    // Affichage des sous-groupes de BD si la BD n'est pas filtrée
                     if(document.getElementById("checkboxes-J1IN6013").checked == 0)
                     {
                         document.getElementById("divGroupeBD").style.display = "block";
@@ -260,6 +379,7 @@
                         document.getElementById("divGroupeBD").style.display = "none";
                     }
 
+                    // Affichage du "groupe 4" d'Algo si l'Algo n'est pas filtré
                     if(document.getElementById("checkboxes-J1IN6011").checked == 0)
                     {
                         document.getElementById("divGroupeAlgo").style.display = "block";
@@ -277,6 +397,7 @@
                         document.getElementById("divGroupeAlgo").style.display = "none";
                     }
 
+                    // Affichage du "groupe 4" d'analyse syntaxique si l'analyse syntaxique n'est pas filtrée
                     if(document.getElementById("checkboxes-J1IN6012").checked == 0)
                     {
                         document.getElementById("divGroupeAS").style.display = "block";
@@ -296,7 +417,9 @@
                 }
             });
 
+            // Affichage des sous-groupes spécifiques au S6 et de la liste des groupes
             document.getElementById("selectSemestre").addEventListener("change", function (e) {
+                // Affichage des sous-groupes spécifiques au S6
                 var semestre = e.target[e.target.selectedIndex].value;
                 var groupes = document.getElementById("selectGroupe");
                 var max = 4;
@@ -307,6 +430,7 @@
                     document.getElementById("divSousGroupes").style.display = "none";
                 }
 
+                // Affichage de la liste des groupes
                 while (groupes.firstChild) {
                     groupes.removeChild(groupes.firstChild);
                 }
