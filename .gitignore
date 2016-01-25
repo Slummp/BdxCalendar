@@ -1,0 +1,5 @@
+*/.DS_STORE
+/css/*
+!/css/bootstrap.min.css
+!/css/bootstrap-theme.min.css
+/js/bootstrap.js
