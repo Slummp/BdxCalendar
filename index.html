@@ -1,0 +1,332 @@
+<!--
+    TODO :
+        - references à hackjack, le site de l'UBDX et à BenjX (?)
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="images/favicon.png">
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script src="js/clipboard.min.js"></script>
+        <title>Emploi du temps - Génerateur de lien ICS - Université Bordeaux - Licence Informatique</title>
+    </head>
+    <body onload="">
+        <div id="params" class="container auth">
+            <h1 class="text-center">Générateur de lien pour agenda</h1>
+            
+            <div id="errors">
+                <!--        -->
+            </div>
+            
+            <div id="big-form" class="well auth-box">
+                <form>
+                    <fieldset>
+
+                        <!-- Select Semestre -->
+                        <div id="divSemestre" class="form-group">
+                            <label class=" control-label" for="selectSemestre">Sélectionnez le semestre</label>
+                            <div class="">
+                                <select id="selectSemestre" name="selectbasic" class="form-control">">
+                                    <option value="" selected disabled hidden>Semestre</option>
+                                    <option value="MI101">Semestre 1</option>
+                                    <option value="MI201">Semestre 2</option>
+                                    <option value="IN300">Semestre 3</option>
+                                    <option value="IN400">Semestre 4</option>
+                                    <option value="IN501">Semestre 5</option>
+                                    <option value="IN601">Semestre 6</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Select Groupe TD -->
+                        <div id="divGroupe" style="display: none;" class="form-group">
+                            <label class=" control-label" for="selectGroupe">Sélectionnez le groupe de TD</label>
+                            <div class="">
+                                <select id="selectGroupe" name="selectbasic" class="form-control">
+                                    <!--        -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Multiple Checkboxes Modules -->
+                        <div id="divModules" class="form-group" style="display: none;">
+                            <label class=" control-label" for="checkboxes">Choisissez les modules <u style="font-size: larger;">à exclure</u> du calendrier</label>
+                            <div id="contentModules" class="">
+                                <!--        -->
+                            </div>
+                        </div>
+
+                        <div id="divSousGroupes" style="display: none;">
+
+                            <!-- Multiple Radios (inline) Groupe BD -->
+                            <div id="divGroupeBD" class="form-group">
+                                <label class=" control-label" for="groupeBD">Quel est votre groupe de BD ?</label>
+                                <div class=""> 
+                                    <label class="radio-inline" for="groupeBD-1">
+                                        <input name="groupeBD" id="groupeBD-1" value="1" checked="checked" type="radio">
+                                        Groupe 1
+                                    </label> 
+                                    <label class="radio-inline" for="groupeBD-2">
+                                        <input name="groupeBD" id="groupeBD-2" value="2" type="radio">
+                                        Groupe 2
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Multiple Radios (inline) Groupe Algo -->
+                            <div id="divGroupeAlgo" class="form-group">
+                                <label class=" control-label" for="groupeAlgo">Etes vous dans le "groupe 4" d'algo ?</label>
+                                <div class=""> 
+                                    <label class="radio-inline" for="groupeAlgo-4">
+                                        <input name="groupeAlgo" id="groupeAlgo-4" value="4" type="radio">
+                                        Oui
+                                    </label> 
+                                    <label class="radio-inline" for="groupeAlgo-0">
+                                        <input name="groupeAlgo" id="groupeAlgo-0" value="0" checked="checked" type="radio">
+                                        Non
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Multiple Radios (inline) Groupe AS&PP3 -->
+                            <div id="divGroupeAS" class="form-group">
+                                <label class=" control-label" for="groupeAS">Etes vous dans le "groupe 4" d'analyse syntaxique ?</label>
+                                <div class=""> 
+                                    <label class="radio-inline" for="groupeAS-4">
+                                        <input name="groupeAS" id="groupeAS-4" value="4" type="radio">
+                                        Oui
+                                    </label> 
+                                    <label class="radio-inline" for="groupeAS-0">
+                                        <input name="groupeAS" id="groupeAS-0" value="0" checked="checked" type="radio">
+                                        Non
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Text input Résultat-->
+                        <div id="divResultat" class="form-group">
+                            <label class=" control-label" for="inputResultat">URL calendrier</label>  
+                            <div class="input-group">
+                                <input id="inputResultat" name="textinput" value="http://www.slummp.esy.es/calendar.php" class="form-control input-md" type="text" readonly>
+                                <span class="input-group-btn">
+                                    <button id="copyButton" class="btn btn-default" type="button" data-clipboard-demo data-clipboard-target="#inputResultat" title="Copier vers le presse-papier" alt="Copier">
+                                        <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            <span class="help-block">
+                                URL à copier dans la partie "abonnement" de votre gestionnaire de calendrier
+                            </span>  
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        
+            <div style="width: 100%; text-align: right; font-style: italic; color: #CCCCCC;">Données provenant de <a style=";" href="http://hackjack.info/et/">HackJack</a></div>
+            
+            <div class="clearfix"></div>
+        </div>
+
+        <script type="text/javascript">
+            var clipboard = new Clipboard('#copyButton');
+            
+            document.getElementById("copyButton").onclick=function(){
+                if(document.getElementById("contentModules").innerHTML == "error")
+                {
+                    document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                            '<span aria-hidden="true">×</span>' +
+                        '</button>' +
+                        '<strong>Attention !</strong> Veuillez choisir un semestre en cours.' +
+                    '</div>';
+                }
+                else if(document.getElementById("selectSemestre").value == "")
+                {
+                    document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                            '<span aria-hidden="true">×</span>' +
+                        '</button>' +
+                        '<strong>Attention !</strong> Vous avez oublié de sélectionner un semestre.' +
+                    '</div>';
+                }
+                else if(document.getElementById("selectGroupe").value == "")
+                {
+                    document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                            '<span aria-hidden="true">×</span>' +
+                        '</button>' +
+                        '<strong>Attention !</strong> Vous avez oublié de sélectionner un groupe de TD.' +
+                    '</div>';
+                }
+                else
+                {
+                    clipboard.on('success', function(e) {
+                        document.getElementById("errors").innerHTML = '<div class="alert alert-success alert-dismissible fade in" role="alert">' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                '<span aria-hidden="true">×</span>' +
+                            '</button>' +
+                            'Url du calendrier copiée dans le presse-papier.' +
+                        '</div>';
+                    });
+            
+                    clipboard.on('error', function(e) {
+                        document.getElementById("errors").innerHTML = '<div class="alert alert-warning alert-dismissible fade in" role="alert">' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                '<span aria-hidden="true">×</span>' +
+                            '</button>' +
+                            '<strong>Attention !</strong> La copie n\'a pas fonctionnée, l\'URL n\'a pas été copiée dans le presse-papier.' +
+                        '</div>';
+                    });
+                }
+            };
+
+            $('#selectSemestre').change(function() {
+                var sem = document.getElementById("selectSemestre").value;
+                $.post("modules.php", { semester: sem }, function(data) {
+                    if(data == "error")
+                    {
+                        document.getElementById("errors").innerHTML = '<div class="alert alert-danger alert-dismissible fade in" role="alert">' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                '<span aria-hidden="true">×</span>' +
+                            '</button>' +
+                            '<strong>Attention !</strong> Veuillez choisir un semestre en cours.' +
+                        '</div>';
+                        document.getElementById("divModules").style.display = 'none';
+                    }
+                    else
+                    {
+                        document.getElementById("errors").innerHTML = '';
+                        document.getElementById("divModules").style.display = 'block';
+                    }
+                    $('#contentModules').html(data);
+                });
+            });
+            
+            document.getElementById("params").addEventListener("change", function (e) {
+                var result = document.getElementById("inputResultat");
+                result.value = "http://www.slummp.esy.es/calendar.php?";
+
+                result.value += "semester=";
+                result.value += document.getElementById("selectSemestre").value;
+
+                if(document.getElementById("selectGroupe").value != "")
+                {
+                    result.value += "&";
+
+                    result.value += "group=";
+                    result.value += document.getElementById("selectGroupe").value;
+                }
+
+                result.value += "&";
+
+                result.value += "filters=";
+                var mod = document.getElementsByName('modules[]');
+                for(var i = 0 ; i < mod.length ; i++) {
+                    if(mod[i].checked == 1)
+                    {
+                        result.value += mod[i].value;
+                        result.value += ",";
+                    }
+                }
+                
+                if(result.value.charAt(result.value.length-1) != "=")
+                    result.value = result.value.substring(0,result.value.length-1);
+                else
+                    result.value = result.value.substring(0,result.value.length-9);
+
+                if(document.getElementById("selectSemestre").value == "IN601")
+                {
+                    if(document.getElementById("checkboxes-J1IN6013").checked == 0)
+                    {
+                        document.getElementById("divGroupeBD").style.display = "block";
+                        
+                        result.value += "&";
+
+                        result.value += "groupBD=";
+                        if(document.getElementById("groupeBD-1").checked == 1)
+                            result.value += "1";
+                        if(document.getElementById("groupeBD-2").checked == 1)
+                            result.value += "2";
+                    }
+                    else
+                    {
+                        document.getElementById("divGroupeBD").style.display = "none";
+                    }
+
+                    if(document.getElementById("checkboxes-J1IN6011").checked == 0)
+                    {
+                        document.getElementById("divGroupeAlgo").style.display = "block";
+                        
+                        result.value += "&";
+
+                        result.value += "groupAlgo=";
+                        if(document.getElementById("groupeAlgo-4").checked == 1)
+                            result.value += "4";
+                        if(document.getElementById("groupeAlgo-0").checked == 1)
+                            result.value += "0";
+                    }
+                    else
+                    {
+                        document.getElementById("divGroupeAlgo").style.display = "none";
+                    }
+
+                    if(document.getElementById("checkboxes-J1IN6012").checked == 0)
+                    {
+                        document.getElementById("divGroupeAS").style.display = "block";
+                        
+                        result.value += "&";
+
+                        result.value += "groupAS=";
+                        if(document.getElementById("groupeAS-4").checked == 1)
+                            result.value += "4";
+                        if(document.getElementById("groupeAS-0").checked == 1)
+                            result.value += "0";
+                    }
+                    else
+                    {
+                        document.getElementById("divGroupeAS").style.display = "none";
+                    }
+                }
+            });
+
+            document.getElementById("selectSemestre").addEventListener("change", function (e) {
+                var semestre = e.target[e.target.selectedIndex].value;
+                var groupes = document.getElementById("selectGroupe");
+                var max = 4;
+                if (semestre == "IN601") {
+                    document.getElementById("divSousGroupes").style.display = "block";
+                    max = 3;
+                } else {
+                    document.getElementById("divSousGroupes").style.display = "none";
+                }
+
+                while (groupes.firstChild) {
+                    groupes.removeChild(groupes.firstChild);
+                }
+
+                var option = document.createElement("option");
+                option.setAttribute("value", "");
+                option.setAttribute("selected", "selected");
+                option.setAttribute("disabled", "disabled");
+                option.setAttribute("hidden", "hidden");
+                option.innerHTML = "Groupe";
+                groupes.appendChild(option);
+
+                for (var i = 1; i <= max; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    option.innerHTML = "Groupe " + i;
+                    groupes.appendChild(option);
+                }
+                document.getElementById("divGroupe").style.display = "block";
+            });
+        </script>
+    </body>
+</html>
