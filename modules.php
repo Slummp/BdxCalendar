@@ -18,7 +18,7 @@ else
 
     $modules= array();
 
-    $sub = array();
+    $sub = array("Cours", "cours", "/", "TD", "td", "TP", "tp", "Machine");
     
     // Liste des modules
     foreach($ical->events() as $event)
