@@ -12,6 +12,9 @@ if(!(isset($_GET["group"])))
 
 //
 
+if(!(isset($_GET["anglais"])))
+    $_GET["anglais"] = 0;
+
 if(!(isset($_GET["groupBD"])))
     $_GET["groupBD"] = 0;
 
@@ -41,33 +44,41 @@ X-PUBLISHED-TTL:PT1H
 foreach($ical->events() as $event)
 {
     // Ajout au calendrier des événements correspondants au sous-groupes choisis
-    switch ($event["SUMMARY"]) {
-        case "TD BD (J1IN6013)":
+    switch (substr($event["SUMMARY"], 0, -11)) {
+        case "TD BD":
             if(substr_compare($event["DESCRIPTION"], "GROUPE " . intval($_GET["groupBD"]), -8) == 0)
-               addEvent($event);
+               addEvent($event, 0);
             break;
-        case "TD Machine BD (J1IN6013)":
+        case "TD Machine BD":
             if(substr_compare($event["DESCRIPTION"], "GROUPE " . intval($_GET["groupBD"]), -8) == 0)
-               addEvent($event);
+               addEvent($event, 0);
             break;
-        case "TD Machine Algo3 (J1IN6011)":
+        case "TD Machine Algo3":
             if(substr_compare($event["DESCRIPTION"], (intval($_GET["groupAlgo"]) == 4 ? "groupe 4" : "AU CREMI"), -8) == 0)
-               addEvent($event);
+               addEvent($event, 0);
             break;
-        case "TD AS et PP3 (J1IN6012)":
+        case "TD AS et PP3":
             if(intval($_GET["groupAS"]) == 4 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) == 0)
-               addEvent($event);
+               addEvent($event, 0);
             else if(intval($_GET["groupAS"]) == 0 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) != 0)
-               addEvent($event);
+               addEvent($event, 0);
             break;
-        case "TD Machine AS et PP3 (J1IN6012)":
+        case "TD Machine AS et PP3":
             if(intval($_GET["groupAS"]) == 4 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) == 0)
-               addEvent($event);
+               addEvent($event, 0);
             else if(intval($_GET["groupAS"]) == 0 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) != 0)
-               addEvent($event);
+               addEvent($event, 0);
+            break;
+        case "TD Anglais S1":
+        case "TD Anglais S2":
+        case "TD Anglais S3":
+        case "TD Anglais S4":
+        case "TD Anglais S5":
+        case "TD Anglais S6":
+            addEvent($event, $_GET["anglais"]);
             break;
         default:
-            addEvent($event);
+            addEvent($event, 0);
             break;
     }
 }
@@ -83,14 +94,21 @@ function filter($event)
 }
 
 // Ajout d'un événement au calendrier
-function addEvent($event)
+function addEvent($event, $room)
 {
     if(filter($event))
     {
         echo 'BEGIN:VEVENT' . "\n";
         foreach($event as $key => $param)
         {
-          echo $key . ':' . $param . "\n";
+            if($room && $key == "LOCATION")
+            {
+                echo $key . ':A22/ Salle ' . $room . "\n";
+            }
+            else
+            {
+                echo $key . ':' . $param . "\n";
+            }
         }
         echo 'END:VEVENT' . "\n";
     }

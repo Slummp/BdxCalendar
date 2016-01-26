@@ -18,7 +18,7 @@ else
 
     $modules= array();
 
-    $sub = array("Cours", "cours", "/", "TD", "td", "TP", "tp", "Machine");
+    $sub = array();
     
     // Liste des modules
     foreach($ical->events() as $event)
@@ -26,7 +26,6 @@ else
         $modules[substr($event["SUMMARY"], -9, -1)] = ltrim(str_replace($sub, "", substr($event["SUMMARY"], 0, -11)));
     }
 
-    $modules = array_unique($modules);
     ksort($modules);
 
     // Retour des modules sous forme de tableau JSON

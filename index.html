@@ -35,7 +35,7 @@
 
                         <!-- Select Semestre -->
                         <div id="divSemestre" class="form-group">
-                            <label class=" control-label" for="selectSemestre">Sélectionnez le semestre</label>
+                            <label class="control-label" for="selectSemestre">Sélectionnez le semestre</label>
                             <div class="">
                                 <select id="selectSemestre" name="selectbasic" class="form-control">">
                                     <option value="" selected disabled hidden>Semestre</option>
@@ -51,7 +51,7 @@
 
                         <!-- Select Groupe TD -->
                         <div id="divGroupe" style="display: none;" class="form-group">
-                            <label class=" control-label" for="selectGroupe">Sélectionnez le groupe de TD</label>
+                            <label class="control-label" for="selectGroupe">Sélectionnez le groupe de TD</label>
                             <div class="">
                                 <select id="selectGroupe" name="selectbasic" class="form-control">
                                     <!--        -->
@@ -61,9 +61,19 @@
 
                         <!-- Multiple Checkboxes Modules -->
                         <div id="divModules" class="form-group" style="display: none;">
-                            <label class=" control-label" for="checkboxes">Choisissez les modules <u style="font-size: larger;">à exclure</u> du calendrier</label>
+                            <label class="control-label" for="checkboxes">Choisissez les modules <u style="font-size: larger;">à exclure</u> du calendrier</label>
                             <div id="contentModules" class="">
                                 <!--        -->
+                            </div>
+                        </div>
+                        
+                        <div id="divAnglais" class="form-group" style="display: none;">
+                            <label class="control-label" for="checkboxeAnglais">
+                                Salle d'anglais personnalisée ?
+                                <input id="checkboxeAnglais" type="checkbox" style="margin-left: 10px;" onchange='document.getElementById("inputAnglais").disabled = !this.checked;'>
+                            </label>
+                            <div class="">
+                                <input id="inputAnglais" class="form-control" type="number" disabled min="0" style="width: 100px;">
                             </div>
                         </div>
 
@@ -72,7 +82,7 @@
 
                             <!-- Multiple Radios (inline) Groupe BD -->
                             <div id="divGroupeBD" class="form-group">
-                                <label class=" control-label" for="groupeBD">Quel est votre groupe de BD ?</label>
+                                <label class="control-label" for="groupeBD">Quel est votre groupe de BD ?</label>
                                 <div class=""> 
                                     <label class="radio-inline" for="groupeBD-1">
                                         <input name="groupeBD" id="groupeBD-1" value="1" checked="checked" type="radio">
@@ -87,7 +97,7 @@
 
                             <!-- Multiple Radios (inline) Groupe Algo -->
                             <div id="divGroupeAlgo" class="form-group">
-                                <label class=" control-label" for="groupeAlgo">Etes vous dans le "groupe 4" d'algo ?</label>
+                                <label class="control-label" for="groupeAlgo">Etes vous dans le "groupe 4" d'algo ?</label>
                                 <div class=""> 
                                     <label class="radio-inline" for="groupeAlgo-4">
                                         <input name="groupeAlgo" id="groupeAlgo-4" value="4" type="radio">
@@ -102,7 +112,7 @@
 
                             <!-- Multiple Radios (inline) Groupe AS&PP3 -->
                             <div id="divGroupeAS" class="form-group">
-                                <label class=" control-label" for="groupeAS">Etes vous dans le "groupe 4" d'analyse syntaxique ?</label>
+                                <label class="control-label" for="groupeAS">Etes vous dans le "groupe 4" d'analyse syntaxique ?</label>
                                 <div class=""> 
                                     <label class="radio-inline" for="groupeAS-4">
                                         <input name="groupeAS" id="groupeAS-4" value="4" type="radio">
@@ -119,7 +129,7 @@
 
                         <!-- Text input Résultat-->
                         <div id="divResultat" class="form-group">
-                            <label class=" control-label" for="inputResultat">URL calendrier</label>  
+                            <label class="control-label" for="inputResultat">URL calendrier</label>  
                             <div class="input-group">
                                 <input id="inputResultat" name="textinput" value="http://www.slummp.esy.es/calendar.php" class="form-control input-md" type="text" readonly>
                                 
@@ -273,6 +283,7 @@
                         erreur('danger', span1);
                         
                         document.getElementById("divModules").style.display = 'none';
+                        document.getElementById("divAnglais").style.display = 'none';
                     }
                     
                     // Si le semestre est valide
@@ -284,6 +295,7 @@
                         
                         // Afficahge de la div contenant la liste des modules
                         document.getElementById("divModules").style.display = 'block';
+                        document.getElementById("divAnglais").style.display = 'block';
                         
                         // Création du contenu de la liste des modules
                         var dataParse = JSON.parse(data);
@@ -356,6 +368,15 @@
                 else
                 {
                     result.value = result.value.substring(0,result.value.length-9);
+                }
+                
+                // Choix de la salle d'anglais
+                if(document.getElementById("checkboxeAnglais").checked == 1)
+                {
+                    result.value += "&";
+
+                    result.value += "anglais=";
+                    result.value += document.getElementById("inputAnglais").value;
                 }
 
                 // Affichage des sous-groupes spécifiques au S6
