@@ -18,7 +18,7 @@
         <!-- Titre -->
         <title>Emploi du temps - Génerateur de lien ICS - Université Bordeaux - Licence Informatique</title>
     </head>
-    <body>
+    <body onload="document.getElementById('inputResultat').value = window.location.href;">
         <div id="params" class="container auth">
             <!-- Titre du formulaire -->
             <h1 class="text-center">Générateur de lien pour agenda</h1>
@@ -131,7 +131,7 @@
                         <div id="divResultat" class="form-group">
                             <label class="control-label" for="inputResultat">URL calendrier</label>  
                             <div class="input-group">
-                                <input id="inputResultat" name="textinput" value="http://www.slummp.esy.es/calendar.php" class="form-control input-md" type="text" readonly>
+                                <input id="inputResultat" name="textinput" class="form-control input-md" type="text" readonly>
                                 
                                 <!-- Bouton de copie -->
                                 <span class="input-group-btn">
@@ -330,7 +330,9 @@
                 var result = document.getElementById("inputResultat");
                 
                 // Base de l'URL
-                result.value = "http://www.slummp.esy.es/calendar.php?";
+                result.value = window.location.href;
+                result.value += "calendar.php";
+                result.value += "?";
 
                 // Ajout du paramètre semestre
                 result.value += "semester=";
