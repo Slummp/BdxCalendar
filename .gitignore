@@ -4,3 +4,6 @@
 !/css/bootstrap.min.css
 !/css/bootstrap-theme.min.css
 /js/bootstrap.js
+/.idea
+/vendor
+composer.lock
