@@ -1,6 +1,11 @@
 <?php
-require 'class.iCalReader.php';
 
+require 'vendor/autoload.php';
+
+use QnNguyen\EdtUbxNS\EdtIndex;
+use QnNguyen\EdtUbxNS\EdtUbx;
+
+//Todo: validation des données ?
 // initialisation des paramètres du GET si non-renseignés
 if(!(isset($_GET["filters"])))
     $_GET["filters"] = "";
@@ -24,100 +29,79 @@ if(!(isset($_GET["groupAlgo"])))
 if(!(isset($_GET["groupAS"])))
     $_GET["groupAS"] = 0;
 
-// Récupération du calendrier du groupe de TD depuis le site d'HackJack
-$ical = new ical('http://www.hackjack.info/et/' . $_GET["semester"] . '_A' . intval($_GET["group"]) . '/ical');
+//récupérer les urls
+//todo: gérer les exeptions ?
+$urls = get_urls();
 
-// En-tête HTML spécifique au calendriers
-header('Content-type: text/calendar; charset=utf-8');
-header('Content-Disposition: inline; filename=calendar.ics');
+//Init un emploi du temps: Semestre2 est choisi par défaut
+//todo: modifier modules.php & index.html pour gérer les cours du premier semestre ?
+$edt = new EdtUbx($urls['Licence']['Semestre2'][$_GET["semester"]][$_GET["group"] == 0 ? 'SERIE A' : ('GROUPE A' . $_GET["group"])]);
 
-// Début du calendrier...
-echo 'BEGIN:VCALENDAR
-PRODID:-//HackJack//Emplois du temps BdxI//FR
-VERSION:2.0
-METHOD:PUBLISH
-X-WR-CALNAME:Emploi du temps
-X-WR-CALDESC:Emploi du temps
-X-PUBLISHED-TTL:PT1H
-';
+$criteria = [];
+$filters = empty($_GET['filters']) ? [] : explode(",", $_GET["filters"]);
 
-foreach($ical->events() as $event)
-{
-    // Ajout au calendrier des événements correspondants au sous-groupes choisis
-    switch (substr($event["SUMMARY"], 0, -11)) {
-        case "TD BD":
-            if(substr_compare($event["DESCRIPTION"], "GROUPE " . intval($_GET["groupBD"]), -8) == 0)
-               addEvent($event, 0);
-            break;
-        case "TD Machine BD":
-            if(substr_compare($event["DESCRIPTION"], "GROUPE " . intval($_GET["groupBD"]), -8) == 0)
-               addEvent($event, 0);
-            break;
-        case "TD Machine Algo3":
-            if(substr_compare($event["DESCRIPTION"], (intval($_GET["groupAlgo"]) == 4 ? "groupe 4" : "AU CREMI"), -8) == 0)
-               addEvent($event, 0);
-            break;
-        case "TD AS et PP3":
-            if(intval($_GET["groupAS"]) == 4 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) == 0)
-               addEvent($event, 0);
-            else if(intval($_GET["groupAS"]) == 0 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) != 0)
-               addEvent($event, 0);
-            break;
-        case "TD Machine AS et PP3":
-            if(intval($_GET["groupAS"]) == 4 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) == 0)
-               addEvent($event, 0);
-            else if(intval($_GET["groupAS"]) == 0 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) != 0)
-               addEvent($event, 0);
-            break;
-        case "TD Anglais S1":
-        case "TD Anglais S2":
-        case "TD Anglais S3":
-        case "TD Anglais S4":
-        case "TD Anglais S5":
-        case "TD Anglais S6":
-            addEvent($event, $_GET["anglais"]);
-            break;
-        default:
-            addEvent($event, 0);
-            break;
-    }
+//exclure les ue choisies
+foreach ($filters as $code) {
+    $criteria[$code] = [];
 }
 
-// ...fin du calendrier
-echo 'END:VCALENDAR';
-
-// Filtrage des modules à exclure
-function filter($event)
-{
-    $filters = explode(",", $_GET["filters"]);
-    return !in_array(substr($event["SUMMARY"], -9, -1), $filters);
+//si BD n'est pas exclu
+if (!in_array('J1IN6013', $filters)) {
+    $criteria['J1IN6013'] = [
+        'category' => ['in' => 'td( machine)?'],
+        'notes' => ['notIn' => 'groupe( )?' . $_GET['groupBD']]
+    ];
 }
 
-// Ajout d'un événement au calendrier
-function addEvent($event, $room)
-{
-    if(filter($event))
-    {
-        echo 'BEGIN:VEVENT' . "\n";
-        foreach($event as $key => $param)
-        {
-            if($room && $key == "LOCATION")
-            {
-                echo $key . ':A22/ Salle ' . $room . "\n";
-            }
-            else
-            {
-                echo $key . ':' . $param . "\n";
-            }
+//si Algo3 n'est pas exclu
+if (!in_array('J1IN6011', $filters)) {
+    $criteria['J1IN6011'] = [
+        'category' => ['in' => 'td( machine)?'],
+        'notes' => [
+            ($_GET['groupAlgo'] == 4 ? 'notIn' : 'in') => 'groupe( )?4'
+        ]
+    ];
+}
+
+//si ASPP3 n'est pas exclu
+if (!in_array('J1IN6012', $filters)) {
+    $criteria['J1IN6012'] = [
+        'category' => ['in' => 'td( machine)?'],
+        'notes' => [
+            ($_GET['groupAS'] == 4 ? 'notIn' : 'in') => 'groupe( )?4'
+        ]
+    ];
+}
+
+//si la salle d'anglais est personnalisée
+if ($_GET['anglais'] && !in_array('J1IN6012', $filters)) {
+    /** @var \QnNguyen\EdtUbxNS\EdtUbxItem $item */
+    foreach ($edt->getItems() as $item) {
+        if (strpos($item->getName(), 'Anglais') !== false) {
+            $item->setLocations(['A21/ Salle ' . $_GET['anglais']]);
         }
-        echo 'END:VEVENT' . "\n";
     }
 }
 
-// Fonction de test...
-function test($event)
+$edt->apply_filter($criteria);
+
+//todo: mettre en cache le contenu généré ?
+echo $edt->toICS();
+
+/**
+ * Récupérer tous les urls des emplois du temps depuis le serveur de l'ubx et les mettre en cache pour 24h.
+ * @return array
+ * @throws Exception
+ */
+function get_urls()
 {
-    if(filter($event))
-        echo $event["SUMMARY"] . " --> " . $event["DESCRIPTION"] . "<br><br>";
+    //vérifier si la version cache n'existe pas ou elle est obsolète (> 1 jours)
+    if (!file_exists('urls.bin') || time() - filemtime('urls.bin') > 24 * 3600) {
+        $urls = EdtIndex::fetch();
+        file_put_contents('urls.bin', serialize($urls));
+    } else {
+        $urls = unserialize(file_get_contents('urls.bin'));
+    }
+
+    return $urls;
 }
-?>
