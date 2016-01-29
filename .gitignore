@@ -1,9 +1,14 @@
-.DS_STORE
-*/.DS_STORE
-/css/*
-!/css/bootstrap.min.css
-!/css/bootstrap-theme.min.css
-/js/bootstrap.js
-/.idea
-/vendor
-composer.lock
+# Divers...
+    .DS_STORE
+    */.DS_STORE
+    /.idea
+    /vendor
+    composer.lock
+
+# CSS
+    /css/*
+    !/css/bootstrap.min.css
+    !/css/bootstrap-theme.min.css
+
+# JS
+    /js/bootstrap.js
