@@ -1,5 +1,3 @@
-
-
 // Objet Clipboard pour gérer la copie
 var clipboard = new Clipboard('#copyButton');
 
@@ -133,7 +131,7 @@ $('#selectSemestre').change(function () {
             document.getElementById("errors").innerHTML = '';
             document.getElementById('contentModules').innerHTML = '';
 
-            // Afficahge de la div contenant la liste des modules
+            // Affichage de la div contenant la liste des modules
             document.getElementById("divModules").style.display = 'block';
             document.getElementById("divAnglais").style.display = 'block';
 
