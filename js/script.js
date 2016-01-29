@@ -7,65 +7,65 @@ var clipboard = new Clipboard('#copyButton');
 document.getElementById("copyButton").onclick = function () {
     // Semestre invalide
     if (document.getElementById("contentModules").innerHTML == "error") {
-        var span1 = document.createElement("span");
+        var span = document.createElement("span");
 
-        var strong1 = document.createElement("strong");
-        strong1.innerHTML = "Attention !";
+        var strong = document.createElement("strong");
+        strong.innerHTML = "Attention !";
 
-        span1.appendChild(strong1);
-        span1.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
+        span.appendChild(strong);
+        span.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
 
-        erreur('danger', span1);
+        erreur('danger', span);
     }
 
     // Semestre non sélectionné
     else if (document.getElementById("selectSemestre").value == "") {
-        var span2 = document.createElement("span");
+        var span = document.createElement("span");
 
-        var strong2 = document.createElement("strong");
-        strong2.innerHTML = "Attention !";
+        var strong = document.createElement("strong");
+        strong.innerHTML = "Attention !";
 
-        span2.appendChild(strong2);
-        span2.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un semestre.'));
+        span.appendChild(strong);
+        span.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un semestre.'));
 
-        erreur('danger', span2);
+        erreur('danger', span);
     }
 
     // Groupe non sélectionné
     else if (document.getElementById("selectGroupe").value == "") {
-        var span3 = document.createElement("span");
+        var span = document.createElement("span");
 
-        var strong3 = document.createElement("strong");
-        strong3.innerHTML = "Attention !";
+        var strong = document.createElement("strong");
+        strong.innerHTML = "Attention !";
 
-        span3.appendChild(strong3);
-        span3.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un groupe de TD.'));
+        span.appendChild(strong);
+        span.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un groupe de TD.'));
 
-        erreur('danger', span3);
+        erreur('danger', span);
     }
 
     // Copie...
     else {
         // ...réussie
         clipboard.on('success', function () {
-            var span4 = document.createElement("span");
+            var span = document.createElement("span");
 
-            span4.appendChild(document.createTextNode(' Url du calendrier copiée dans le presse-papier.'));
+            span.appendChild(document.createTextNode(' Url du calendrier copiée dans le presse-papier.'));
 
-            erreur('success', span4);
+            erreur('success', span);
         });
 
         // ...échouée
         clipboard.on('error', function () {
-            var span5 = document.createElement("span");
+            var span = document.createElement("span");
 
-            var strong5 = document.createElement("strong");
-            strong5.innerHTML = "Attention !";
+            var strong = document.createElement("strong");
+            strong.innerHTML = "Attention !";
 
-            span5.appendChild(strong5);
-            span5.appendChild(document.createTextNode(' La copie n\'a pas fonctionnée, l\'URL n\'a pas été copiée dans le presse-papier.'));
+            span.appendChild(strong);
+            span.appendChild(document.createTextNode(' La copie n\'a pas fonctionnée, l\'URL n\'a pas été copiée dans le presse-papier.'));
 
-            erreur('warning', span5);
+            erreur('warning', span);
         });
     }
 };
@@ -107,15 +107,17 @@ $('#selectSemestre').change(function () {
         // Si le semestre n'est pas valide
         if (data == "error") {
             // Afficher l'erreur correspondante
-            var span1 = document.createElement("span");
+            var span = document.createElement("span");
 
-            var strong1 = document.createElement("strong");
-            strong1.innerHTML = "Attention !";
+            var strong = document.createElement("strong");
+            strong.innerHTML = "Attention !";
 
-            span1.appendChild(strong1);
-            span1.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
+            span.appendChild(strong);
+            span.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
 
-            erreur('danger', span1);
+            erreur('danger', span);
+
+            document.getElementById("contentModules").innerHTML = "error"
 
             document.getElementById("divModules").style.display = 'none';
             document.getElementById("divAnglais").style.display = 'none';
