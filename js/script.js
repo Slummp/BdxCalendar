@@ -5,11 +5,15 @@ var clipboard = new Clipboard('#copyButton');
 
 // Gestion des erreurs
 document.getElementById("copyButton").onclick = function () {
+    // Variables...
+    var span;
+    var strong;
+
     // Semestre invalide
     if (document.getElementById("contentModules").innerHTML == "error") {
-        var span = document.createElement("span");
+        span = document.createElement("span");
 
-        var strong = document.createElement("strong");
+        strong = document.createElement("strong");
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
@@ -20,9 +24,9 @@ document.getElementById("copyButton").onclick = function () {
 
     // Semestre non sélectionné
     else if (document.getElementById("selectSemestre").value == "") {
-        var span = document.createElement("span");
+        span = document.createElement("span");
 
-        var strong = document.createElement("strong");
+        strong = document.createElement("strong");
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
@@ -33,9 +37,9 @@ document.getElementById("copyButton").onclick = function () {
 
     // Groupe non sélectionné
     else if (document.getElementById("selectGroupe").value == "") {
-        var span = document.createElement("span");
+        span = document.createElement("span");
 
-        var strong = document.createElement("strong");
+        strong = document.createElement("strong");
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
@@ -48,18 +52,18 @@ document.getElementById("copyButton").onclick = function () {
     else {
         // ...réussie
         clipboard.on('success', function () {
-            var span = document.createElement("span");
+            span = document.createElement("span");
 
-            span.appendChild(document.createTextNode(' Url du calendrier copiée dans le presse-papier.'));
+            span.appendChild(document.createTextNode('Url du calendrier copiée dans le presse-papier.'));
 
-            erreur('success', span);
+            erreur('success', "Url du calendrier copiée dans le presse-papier.");
         });
 
         // ...échouée
         clipboard.on('error', function () {
-            var span = document.createElement("span");
+            span = document.createElement("span");
 
-            var strong = document.createElement("strong");
+            strong = document.createElement("strong");
             strong.innerHTML = "Attention !";
 
             span.appendChild(strong);
@@ -117,7 +121,7 @@ $('#selectSemestre').change(function () {
 
             erreur('danger', span);
 
-            document.getElementById("contentModules").innerHTML = "error"
+            document.getElementById("contentModules").innerHTML = "error";
 
             document.getElementById("divModules").style.display = 'none';
             document.getElementById("divAnglais").style.display = 'none';
