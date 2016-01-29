@@ -17,7 +17,7 @@ document.getElementById("copyButton").onclick = function () {
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
-        span.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
+        span.appendChild(document.createTextNode(" Veuillez choisir un semestre en cours."));
 
         erreur('danger', span);
     }
@@ -30,7 +30,7 @@ document.getElementById("copyButton").onclick = function () {
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
-        span.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un semestre.'));
+        span.appendChild(document.createTextNode(" Vous avez oublié de sélectionner un semestre."));
 
         erreur('danger', span);
     }
@@ -43,7 +43,7 @@ document.getElementById("copyButton").onclick = function () {
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
-        span.appendChild(document.createTextNode(' Vous avez oublié de sélectionner un groupe de TD.'));
+        span.appendChild(document.createTextNode(" Vous avez oublié de sélectionner un groupe de TD."));
 
         erreur('danger', span);
     }
@@ -54,9 +54,9 @@ document.getElementById("copyButton").onclick = function () {
         clipboard.on('success', function () {
             span = document.createElement("span");
 
-            span.appendChild(document.createTextNode('Url du calendrier copiée dans le presse-papier.'));
+            span.appendChild(document.createTextNode("Url du calendrier copiée dans le presse-papier."));
 
-            erreur('success', "Url du calendrier copiée dans le presse-papier.");
+            erreur('success', span);
         });
 
         // ...échouée
@@ -67,7 +67,7 @@ document.getElementById("copyButton").onclick = function () {
             strong.innerHTML = "Attention !";
 
             span.appendChild(strong);
-            span.appendChild(document.createTextNode(' La copie n\'a pas fonctionnée, l\'URL n\'a pas été copiée dans le presse-papier.'));
+            span.appendChild(document.createTextNode(" La copie n'a pas fonctionnée, l'URL n'a pas été copiée dans le presse-papier."));
 
             erreur('warning', span);
         });
@@ -117,7 +117,7 @@ $('#selectSemestre').change(function () {
             strong.innerHTML = "Attention !";
 
             span.appendChild(strong);
-            span.appendChild(document.createTextNode(' Veuillez choisir un semestre en cours.'));
+            span.appendChild(document.createTextNode(" Veuillez choisir un semestre en cours."));
 
             erreur('danger', span);
 
