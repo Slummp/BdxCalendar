@@ -8,7 +8,7 @@ document.getElementById("copyButton").onclick = function () {
     var strong;
 
     // Semestre invalide
-    if (document.getElementById("contentModules").innerHTML == "error") {
+    if (document.getElementById("contentMod ules").innerHTML == "error") {
         span = document.createElement("span");
 
         strong = document.createElement("strong");
