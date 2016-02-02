@@ -109,11 +109,11 @@
                             <!-- Multiple Radios (inline) Groupe AS&PP3 -->
                             <div id="divGroupeAS" class="form-group">
                                 <label class="control-label">Etes vous dans le "groupe 4" d'analyse syntaxique ?</label>
-                                <div class=""> 
+                                <div class="">
                                     <label class="radio-inline" for="groupeAS-4">
                                         <input name="groupeAS" id="groupeAS-4" value="4" type="radio">
                                         Oui
-                                    </label> 
+                                    </label>
                                     <label class="radio-inline" for="groupeAS-0">
                                         <input name="groupeAS" id="groupeAS-0" value="0" checked="checked" type="radio">
                                         Non
@@ -125,10 +125,10 @@
 
                         <!-- Text input Résultat-->
                         <div id="divResultat" class="form-group">
-                            <label class="control-label" for="inputResultat">URL calendrier</label>  
+                            <label class="control-label" for="inputResultat">URL calendrier</label>
                             <div class="input-group">
                                 <input id="inputResultat" name="textinput" class="form-control input-md" type="text" readonly>
-                                
+
                                 <!-- Bouton de copie -->
                                 <span class="input-group-btn">
                                     <button id="copyButton" class="btn btn-default" type="button" data-clipboard-demo data-clipboard-target="#inputResultat" title="Copier vers le presse-papier" alt="Copier">
@@ -138,16 +138,35 @@
                             </div>
                             <span class="help-block">
                                 URL à copier dans la partie "abonnement" de votre gestionnaire de calendrier
-                            </span>  
+                            </span>
                         </div>
 
                     </fieldset>
                 </form>
             </div>
-        
-            <!-- Référence à HackJack -->
-            <div style="width: 100%; text-align: right; font-style: italic; color: #CCCCCC;">
-                Données provenant de <a style=";" href="http://hackjack.info/et/">HackJack</a>
+
+            <!-- Footer -->
+            <div class="row">
+                <div class="col-md-4">
+                    <!-- Infos... -->
+                    <div style="width: 100%; text-align: left; font-style: italic; color: #CCCCCC;">
+                        BdxCalendar v1.1 - Alexandre Brouste
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Lien GitHub -->
+                    <div style="text-align: center;">
+                        <a href="https://www.github.com/Slummp/BdxCalendar" target="_blank"><img src="images/GitHubLogo.png" /></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Référence à HackJack -->
+                    <div style="width: 100%; text-align: right; font-style: italic; color: #CCCCCC;">
+                        Données provenant de <a href="http://hackjack.info/et/" target="_blank">HackJack</a>
+                    </div>
+                </div>
             </div>
             
             <div class="clearfix"></div>

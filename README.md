@@ -20,3 +20,10 @@
   
 ## License
   - [LICENSE](https://github.com/Slummp/BdxCalendar/blob/master/LICENSE)
+  
+## Prochaines possibles fonctionnalités à ajouter...
+  - Alarme x minutes avant le premier évènement de la journée - **En cours de dev**
+  - Coloration des évènements en fonction du type d'évènement (Cours - TD - TD Machine) - **Semble impossible**
+  - Coloration des évènements en fonction du module de l'évènement - **Semble impossible**
+  - Regarder du côté du paramètre "occupé" des évènements VEVENT voir s'il y a moyen d'en faire un truc sympa (genre activer le silencieux...?) - **A regarder de plus prêt**
+  
