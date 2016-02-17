@@ -32,7 +32,7 @@
                         <div id="divSemestre" class="form-group">
                             <label class="control-label" for="selectSemestre">Sélectionnez le semestre</label>
                             <div class="">
-                                <select id="selectSemestre" name="selectbasic" class="form-control">
+                                <select id="selectSemestre" name="selectbasic" class="form-control">">
                                     <option value="" selected disabled hidden>Semestre</option>
                                     <option value="MI101">Semestre 1</option>
                                     <option value="MI201">Semestre 2</option>

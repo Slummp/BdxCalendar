@@ -24,6 +24,11 @@ if(!(isset($_GET["groupAlgo"])))
 if(!(isset($_GET["groupAS"])))
     $_GET["groupAS"] = 0;
 
+//
+
+if(!(isset($_GET["alarm"])))
+    $_GET["alarm"] = 0;
+
 // Récupération du calendrier du groupe de TD depuis le site d'HackJack
 $ical = new ical('http://www.hackjack.info/et/' . $_GET["semester"] . '_A' . intval($_GET["group"]) . '/ical');
 
@@ -31,43 +36,53 @@ $ical = new ical('http://www.hackjack.info/et/' . $_GET["semester"] . '_A' . int
 header('Content-type: text/calendar; charset=utf-8');
 header('Content-Disposition: inline; filename=calendar.ics');
 
-// Début du calendrier...
-echo 'BEGIN:VCALENDAR
-PRODID:-//HackJack//Emplois du temps BdxI//FR
-VERSION:2.0
-METHOD:PUBLISH
-X-WR-CALNAME:Emploi du temps
-X-WR-CALDESC:Emploi du temps
-X-PUBLISHED-TTL:PT1H
-';
+$events = $ical->events();
 
-foreach($ical->events() as $event)
+// Début du calendrier...
+echo "BEGIN:VCALENDARr
+PRODID:-//HackJack//Emplois du temps BdxI//FR\r
+VERSION:2.0\r
+METHOD:PUBLISH\r
+X-WR-CALNAME:Emploi du temps\r
+X-WR-CALDESC:Emploi du temps\r
+X-PUBLISHED-TTL:PT1H\r
+";
+
+// Génération du tableau servant de base pour le tri dans l'ordre chronologique des événements de $events
+foreach ($events as $key => $value) {
+    $order[$key] =  substr($value['DTSTART'], 0, -8) . substr($value['DTSTART'], 9, -1);
+}
+
+// Tri dans l'ordre chronologique des événements de $events
+array_multisort($order, $events);
+
+foreach($events as $event)
 {
     // Ajout au calendrier des événements correspondants au sous-groupes choisis
     switch (substr($event["SUMMARY"], 0, -11)) {
         case "TD BD":
             if(substr_compare($event["DESCRIPTION"], "GROUPE " . intval($_GET["groupBD"]), -8) == 0)
-               addEvent($event, 0);
+                addEvent($event);
             break;
         case "TD Machine BD":
             if(substr_compare($event["DESCRIPTION"], "GROUPE " . intval($_GET["groupBD"]), -8) == 0)
-               addEvent($event, 0);
+                addEvent($event);
             break;
         case "TD Machine Algo3":
             if(substr_compare($event["DESCRIPTION"], (intval($_GET["groupAlgo"]) == 4 ? "groupe 4" : "AU CREMI"), -8) == 0)
-               addEvent($event, 0);
+                addEvent($event);
             break;
         case "TD AS et PP3":
             if(intval($_GET["groupAS"]) == 4 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) == 0)
-               addEvent($event, 0);
+                addEvent($event);
             else if(intval($_GET["groupAS"]) == 0 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) != 0)
-               addEvent($event, 0);
+                addEvent($event);
             break;
         case "TD Machine AS et PP3":
             if(intval($_GET["groupAS"]) == 4 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) == 0)
-               addEvent($event, 0);
+                addEvent($event);
             else if(intval($_GET["groupAS"]) == 0 && substr_compare($event["DESCRIPTION"], " GROUPE4", -8) != 0)
-               addEvent($event, 0);
+                addEvent($event);
             break;
         case "TD Anglais S1":
         case "TD Anglais S2":
@@ -78,7 +93,7 @@ foreach($ical->events() as $event)
             addEvent($event, $_GET["anglais"]);
             break;
         default:
-            addEvent($event, 0);
+            addEvent($event);
             break;
     }
 }
@@ -94,23 +109,27 @@ function filter($event)
 }
 
 // Ajout d'un événement au calendrier
-function addEvent($event, $room)
+function addEvent($event, $alarm = 0, $room = 0)
 {
     if(filter($event))
     {
-        echo 'BEGIN:VEVENT' . "\n";
+        echo 'BEGIN:VEVENT' . "\r\n";
         foreach($event as $key => $param)
         {
             if($room && $key == "LOCATION")
             {
-                echo $key . ':A22/ Salle ' . $room . "\n";
+                echo $key . ':A22/ Salle ' . $room . "\r\n";
             }
             else
             {
-                echo $key . ':' . $param . "\n";
+                echo $key . ':' . $param . "\r\n";
             }
         }
-        echo 'END:VEVENT' . "\n";
+        if($alarm)
+        {
+
+        }
+        echo 'END:VEVENT' . "\r\n";
     }
 }
 
