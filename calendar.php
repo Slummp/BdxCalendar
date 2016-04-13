@@ -39,7 +39,7 @@ header('Content-Disposition: inline; filename=calendar.ics');
 $events = $ical->events();
 
 // Début du calendrier...
-echo "BEGIN:VCALENDARr
+echo "BEGIN:VCALENDAR\r
 PRODID:-//HackJack//Emplois du temps BdxI//FR\r
 VERSION:2.0\r
 METHOD:PUBLISH\r
