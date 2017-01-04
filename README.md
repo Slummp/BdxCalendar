@@ -6,7 +6,7 @@
 
 ## Installation
   - Copy all files to a folder where PHP can be executed
-  Install Eluceo/ical package by using [Composer](http://getcomposer.org), running this command:
+  - Install Eluceo/ical package by using [Composer](http://getcomposer.org), running this command:
 
 ```sh
 composer update
