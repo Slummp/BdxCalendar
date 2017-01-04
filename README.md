@@ -9,7 +9,7 @@
   - Install Eluceo/ical package by using [Composer](http://getcomposer.org), running this command:
 
 ```sh
-composer update
+composer install
 ```
 
 [Link to Packagist](https://packagist.org/packages/eluceo/ical)
