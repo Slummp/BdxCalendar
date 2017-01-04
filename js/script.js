@@ -7,15 +7,15 @@ document.getElementById("copyButton").onclick = function () {
     var span;
     var strong;
 
-    // Semestre invalide
-    if (document.getElementById("contentModules").innerHTML == "error") {
+    // Diplôme non sélectionné
+    if (document.getElementById("selectDiplome").value == "") {
         span = document.createElement("span");
 
         strong = document.createElement("strong");
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
-        span.appendChild(document.createTextNode(" Veuillez choisir un semestre en cours."));
+        span.appendChild(document.createTextNode(" Vous avez oublié de sélectionner un diplôme."));
 
         erreur('danger', span);
     }
@@ -33,15 +33,15 @@ document.getElementById("copyButton").onclick = function () {
         erreur('danger', span);
     }
 
-    // Groupe non sélectionné
-    else if (document.getElementById("selectGroupe").value == "") {
+    // Formation non sélectionnée
+    else if (document.getElementById("selectFormation").value == "") {
         span = document.createElement("span");
 
         strong = document.createElement("strong");
         strong.innerHTML = "Attention !";
 
         span.appendChild(strong);
-        span.appendChild(document.createTextNode(" Vous avez oublié de sélectionner un groupe de TD."));
+        span.appendChild(document.createTextNode(" Vous avez oublié de sélectionner une formation."));
 
         erreur('danger', span);
     }
@@ -72,6 +72,123 @@ document.getElementById("copyButton").onclick = function () {
     }
 };
 
+// Affichage des semestres
+$('#selectDiplome').change(function () {
+    document.getElementById("divSemestre").style.display = 'block';
+});
+
+// Récupération de la liste des formations
+$('#selectSemestre').change(function () {
+    // Récupération du diplôme et du semestre
+    var dip = document.getElementById("selectDiplome").value;
+    var sem = document.getElementById("selectSemestre").value;
+
+    // Récupération de la liste des formations en AJAX
+    $.post("formations.php", {diplome: dip, semestre: sem}, function (data) {
+        // Nettoyage de la div d'erreurs et de la liste des formations
+        document.getElementById("errors").innerHTML = '';
+        document.getElementById('selectFormation').innerHTML = '';
+
+        // Affichage de la div contenant la liste des formations
+        document.getElementById("divFormation").style.display = 'block';
+
+        // Création du contenu de la liste des formations
+        var dataParse = JSON.parse(data);
+
+        var selectOption = document.createElement("option");
+        selectOption.setAttribute("value", "");
+        selectOption.setAttribute("selected", "selected");
+        selectOption.setAttribute("disabled", "disabled");
+        selectOption.setAttribute("hidden", "hidden");
+
+        document.getElementById("selectFormation").appendChild(selectOption);
+        selectOption.innerHTML = "Sélectionnez une formation";
+
+        for (var key in dataParse) {
+            var selectOption = document.createElement("option");
+            selectOption.setAttribute("value", key);
+
+            //
+
+            document.getElementById("selectFormation").appendChild(selectOption);
+            selectOption.innerHTML = dataParse[key];
+        }
+    });
+});
+
+// Récupération de la liste des groupes et de la liste des modules
+$('#selectFormation').change(function () {
+    // Récupération du diplôme, du semestre et de la formation
+    var dip = document.getElementById("selectDiplome").value;
+    var sem = document.getElementById("selectSemestre").value;
+    var form = document.getElementById("selectFormation").value;
+
+    // Nettoyage de la div d'erreurs, de la liste des groupes et de la liste des modules
+    document.getElementById("errors").innerHTML = '';
+    document.getElementById('contentGroupes').innerHTML = '';
+    document.getElementById('contentModules').innerHTML = '';
+
+    // Récupération de la liste des groupes et des modules en AJAX
+    $.post("options.php", {diplome: dip, semestre: sem, formation: form}, function (data) {
+        // Création du contenu de la liste des groupes et des modules
+        var dataParse = JSON.parse(data);
+        var groupes = dataParse["Groupes"];
+        var modules = dataParse["Modules"];
+
+        // Groupes
+        for (var key in groupes) {
+            var checkboxDiv = document.createElement("div");
+            checkboxDiv.setAttribute("class", "checkbox");
+
+            var checkboxLabel = document.createElement("label");
+            checkboxLabel.setAttribute("for", "checkboxesGroupe-" + key);
+
+            var checkboxInput = document.createElement("input");
+            checkboxInput.setAttribute("id", "checkboxesGroupe-" + key);
+            checkboxInput.setAttribute("name", "groupes[]");
+            checkboxInput.setAttribute("type", "checkbox");
+            checkboxInput.setAttribute("value", encodeURI(groupes[key]));
+
+            //
+
+            document.getElementById("contentGroupes").appendChild(checkboxDiv);
+            checkboxDiv.appendChild(checkboxLabel);
+            checkboxLabel.appendChild(checkboxInput);
+            checkboxLabel.appendChild(document.createTextNode(groupes[key]));
+        }
+
+        // Modules
+        for (var key in modules) {
+            var checkboxDiv = document.createElement("div");
+            checkboxDiv.setAttribute("class", "checkbox");
+
+            var checkboxLabel = document.createElement("label");
+            checkboxLabel.setAttribute("for", "checkboxesModule-" + key);
+
+            var checkboxInput = document.createElement("input");
+            checkboxInput.setAttribute("id", "checkboxesModule-" + key);
+            checkboxInput.setAttribute("name", "modules[]");
+            checkboxInput.setAttribute("type", "checkbox");
+            checkboxInput.setAttribute("value", key);
+
+            //
+
+            document.getElementById("contentModules").appendChild(checkboxDiv);
+            checkboxDiv.appendChild(checkboxLabel);
+            checkboxLabel.appendChild(checkboxInput);
+            checkboxLabel.appendChild(document.createTextNode(modules[key]));
+        }
+
+        // Affichage de la div contenant la liste des formations
+        if (document.getElementById('contentGroupes').innerHTML != '')
+            document.getElementById("divGroupes").style.display = 'block';
+
+        // Affichage de la div contenant la liste des modules
+        if (document.getElementById('contentModules').innerHTML != '')
+            document.getElementById("divModules").style.display = 'block';
+    });
+});
+
 // Affichage d'un message d'erreur (type = {danger, warning, info, success})
 function erreur(type, message) {
     // Nettoyage de la div d'erreurs
@@ -99,69 +216,6 @@ function erreur(type, message) {
     error.appendChild(message);
 }
 
-// Récupération de la liste des modules
-$('#selectSemestre').change(function () {
-    // Récupération du code du module
-    var sem = document.getElementById("selectSemestre").value;
-
-    // Récupération de la liste des modules en AJAX
-    $.post("modules.php", {semester: sem}, function (data) {
-        // Si le semestre n'est pas valide
-        if (data == "error") {
-            // Afficher l'erreur correspondante
-            var span = document.createElement("span");
-
-            var strong = document.createElement("strong");
-            strong.innerHTML = "Attention !";
-
-            span.appendChild(strong);
-            span.appendChild(document.createTextNode(" Veuillez choisir un semestre en cours."));
-
-            erreur('danger', span);
-
-            document.getElementById("contentModules").innerHTML = "error";
-
-            document.getElementById("divModules").style.display = 'none';
-            document.getElementById("divAnglais").style.display = 'none';
-        }
-
-        // Si le semestre est valide
-        else {
-            // Nettoyage de la div d'erreurs et de la liste des modules
-            document.getElementById("errors").innerHTML = '';
-            document.getElementById('contentModules').innerHTML = '';
-
-            // Affichage de la div contenant la liste des modules
-            document.getElementById("divModules").style.display = 'block';
-            document.getElementById("divAnglais").style.display = 'block';
-
-            // Création du contenu de la liste des modules
-            var dataParse = JSON.parse(data);
-
-            for (var key in dataParse) {
-                var checkboxDiv = document.createElement("div");
-                checkboxDiv.setAttribute("class", "checkbox");
-
-                var checkboxLabel = document.createElement("label");
-                checkboxLabel.setAttribute("for", "checkboxes-" + key);
-
-                var checkboxInput = document.createElement("input");
-                checkboxInput.setAttribute("id", "checkboxes-" + key);
-                checkboxInput.setAttribute("name", "modules[]");
-                checkboxInput.setAttribute("type", "checkbox");
-                checkboxInput.setAttribute("value", key);
-
-                //
-
-                document.getElementById("contentModules").appendChild(checkboxDiv);
-                checkboxDiv.appendChild(checkboxLabel);
-                checkboxLabel.appendChild(checkboxInput);
-                checkboxLabel.appendChild(document.createTextNode(dataParse[key]));
-            }
-        }
-    });
-});
-
 // Génération de l'URL du calendrier en fonction des paramètres du formulaire
 document.getElementById("params").addEventListener("change", function () {
     // Récupération de l'input contenant le résultat
@@ -172,131 +226,73 @@ document.getElementById("params").addEventListener("change", function () {
     result.value += "calendar.php";
     result.value += "?";
 
-    // Ajout du paramètre semestre
-    result.value += "semester=";
-    result.value += document.getElementById("selectSemestre").value;
+    // Ajout du paramètre diplome
+    result.value += "diplome=";
+    result.value += document.getElementById("selectDiplome").value;
 
-    // Ajout du paramètre groupe de TD (si précisé)
-    if (document.getElementById("selectGroupe").value != "") {
-        result.value += "&";
-
-        result.value += "group=";
-        result.value += document.getElementById("selectGroupe").value;
-    }
-
-    // Ajout du paramètre filtres
     result.value += "&";
 
-    result.value += "filters=";
-    var mod = document.getElementsByName('modules[]');
-    for (var i = 0; i < mod.length; i++) {
-        if (mod[i].checked == 1) {
-            result.value += mod[i].value;
-            result.value += ",";
+    // Ajout du paramètre semestre
+    result.value += "semestre=";
+    result.value += document.getElementById("selectSemestre").value;
+    
+    if (result.value.charAt(result.value.length - 1) == "=") {
+        result.value = result.value.substring(0, result.value.length - 10);
+    }
+
+    result.value += "&";
+
+    // Ajout du paramètre formation
+    result.value += "formation=";
+    result.value += document.getElementById("selectFormation").value;
+    
+    if (result.value.charAt(result.value.length - 1) == "=") {
+        result.value = result.value.substring(0, result.value.length - 11);
+    }
+
+    // Ajout des groupes (si précisés)
+    var groupes = document.getElementsByName('groupes[]');
+    if (groupes.length != 0) {
+        result.value += "&groupes=";
+
+        for (var i = 0; i < groupes.length; i++) {
+            if (groupes[i].checked == 1) {
+                result.value += groupes[i].value;
+                result.value += ",";
+            }
+        }
+
+        // Suppresion de la virgule de fin inutile
+        if (result.value.charAt(result.value.length - 1) == ",") {
+            result.value = result.value.substring(0, result.value.length - 1);
+        }
+
+        // Suppression du paramètre inutile (parce que vide..)
+        else if (result.value.charAt(result.value.length - 1) == "=") {
+            result.value = result.value.substring(0, result.value.length - 9);
         }
     }
 
-    // Suppresion de la virgule de fin inutile
-    if (result.value.charAt(result.value.length - 1) != "=") {
-        result.value = result.value.substring(0, result.value.length - 1);
-    }
+    // Ajout des filtres (si précisés)
+    var modules = document.getElementsByName('modules[]');
+    if (modules.length != 0) {
+        result.value += "&filtres=";
 
-    // Suppression du paramètre inutile (parce que vide..)
-    else {
-        result.value = result.value.substring(0, result.value.length - 9);
-    }
-
-    // Choix de la salle d'anglais
-    if (document.getElementById("checkboxeAnglais").checked == 1) {
-        result.value += "&";
-
-        result.value += "anglais=";
-        result.value += document.getElementById("inputAnglais").value;
-    }
-
-    // Affichage des sous-groupes spécifiques au S6
-    if (document.getElementById("selectSemestre").value == "IN601") {
-        // Affichage des sous-groupes de BD si la BD n'est pas filtrée
-        if (document.getElementById("checkboxes-J1IN6013").checked == 0) {
-            document.getElementById("divGroupeBD").style.display = "block";
-
-            result.value += "&";
-
-            result.value += "groupBD=";
-            if (document.getElementById("groupeBD-1").checked == 1)
-                result.value += "1";
-            if (document.getElementById("groupeBD-2").checked == 1)
-                result.value += "2";
-        }
-        else {
-            document.getElementById("divGroupeBD").style.display = "none";
+        for (var i = 0; i < modules.length; i++) {
+            if (modules[i].checked == 1) {
+                result.value += modules[i].value;
+                result.value += ",";
+            }
         }
 
-        // Affichage du "groupe 4" d'Algo si l'Algo n'est pas filtré
-        if (document.getElementById("checkboxes-J1IN6011").checked == 0) {
-            document.getElementById("divGroupeAlgo").style.display = "block";
-
-            result.value += "&";
-
-            result.value += "groupAlgo=";
-            if (document.getElementById("groupeAlgo-4").checked == 1)
-                result.value += "4";
-            if (document.getElementById("groupeAlgo-0").checked == 1)
-                result.value += "0";
-        }
-        else {
-            document.getElementById("divGroupeAlgo").style.display = "none";
+        // Suppresion de la virgule de fin inutile
+        if (result.value.charAt(result.value.length - 1) == ",") {
+            result.value = result.value.substring(0, result.value.length - 1);
         }
 
-        // Affichage du "groupe 4" d'analyse syntaxique si l'analyse syntaxique n'est pas filtrée
-        if (document.getElementById("checkboxes-J1IN6012").checked == 0) {
-            document.getElementById("divGroupeAS").style.display = "block";
-
-            result.value += "&";
-
-            result.value += "groupAS=";
-            if (document.getElementById("groupeAS-4").checked == 1)
-                result.value += "4";
-            if (document.getElementById("groupeAS-0").checked == 1)
-                result.value += "0";
-        }
-        else {
-            document.getElementById("divGroupeAS").style.display = "none";
+        // Suppression du paramètre inutile (parce que vide..)
+        else if (result.value.charAt(result.value.length - 1) == "=") {
+            result.value = result.value.substring(0, result.value.length - 9);
         }
     }
-});
-
-// Affichage des sous-groupes spécifiques au S6 et de la liste des groupes
-document.getElementById("selectSemestre").addEventListener("change", function (e) {
-    // Affichage des sous-groupes spécifiques au S6
-    var semestre = e.target[e.target.selectedIndex].value;
-    var groupes = document.getElementById("selectGroupe");
-    var max = 4;
-    if (semestre == "IN601") {
-        document.getElementById("divSousGroupes").style.display = "block";
-        max = 3;
-    } else {
-        document.getElementById("divSousGroupes").style.display = "none";
-    }
-
-    // Affichage de la liste des groupes
-    while (groupes.firstChild) {
-        groupes.removeChild(groupes.firstChild);
-    }
-
-    var option = document.createElement("option");
-    option.setAttribute("value", "");
-    option.setAttribute("selected", "selected");
-    option.setAttribute("disabled", "disabled");
-    option.setAttribute("hidden", "hidden");
-    option.innerHTML = "Groupe";
-    groupes.appendChild(option);
-
-    for (var i = 1; i <= max; i++) {
-        var opt = document.createElement("option");
-        opt.value = i;
-        opt.innerHTML = "Groupe " + i;
-        groupes.appendChild(opt);
-    }
-    document.getElementById("divGroupe").style.display = "block";
 });

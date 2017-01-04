@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css" />
         
         <!-- Titre -->
-        <title>Emploi du temps - Génerateur de lien ICS - Université Bordeaux - Licence Informatique</title>
+        <title>Emploi du temps - Génerateur de lien ICS - Université Bordeaux - Collège Sciences et Technologies</title>
     </head>
     <body onload="document.getElementById('inputResultat').value = window.location.href;">
         <div id="params" class="container auth">
@@ -28,99 +28,55 @@
                 <form>
                     <fieldset>
 
-                        <!-- Select Semestre -->
-                        <div id="divSemestre" class="form-group">
-                            <label class="control-label" for="selectSemestre">Sélectionnez le semestre</label>
+                        <!-- Select Diplôme -->
+                        <div id="divDiplome" class="form-group">
+                            <label class="control-label" for="selectDiplome">Sélectionnez le diplôme</label>
                             <div class="">
-                                <select id="selectSemestre" name="selectbasic" class="form-control">
-                                    <option value="" selected disabled hidden>Semestre</option>
-                                    <option value="MI101">Semestre 1</option>
-                                    <option value="MI201">Semestre 2</option>
-                                    <option value="IN300">Semestre 3</option>
-                                    <option value="IN400">Semestre 4</option>
-                                    <option value="IN501">Semestre 5</option>
-                                    <option value="IN601">Semestre 6</option>
+                                <select id="selectDiplome" name="selectbasic" class="form-control">
+                                    <option value="" selected disabled hidden>Diplôme</option>
+                                    <option value="L">Licence</option>
+                                    <option value="M1">Master 1</option>
+                                    <option value="M2">Master 2</option>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Select Groupe TD -->
-                        <div id="divGroupe" style="display: none;" class="form-group">
-                            <label class="control-label" for="selectGroupe">Sélectionnez le groupe de TD</label>
+                        <!-- Select Semestre -->
+                        <div id="divSemestre" style="display: none;" class="form-group">
+                            <label class="control-label" for="selectSemestre">Sélectionnez le semestre</label>
                             <div class="">
-                                <select id="selectGroupe" name="selectbasic" class="form-control">
+                                <select id="selectSemestre" name="selectbasic" class="form-control">
+                                    <option value="" selected disabled hidden>Semestre</option>
+                                    <option value="S1">Semestre 1</option>
+                                    <option value="S2">Semestre 2</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Select Formation -->
+                        <div id="divFormation" style="display: none;" class="form-group">
+                            <label class="control-label" for="selectFormation">Sélectionnez votre formation</label>
+                            <div class="">
+                                <select id="selectFormation" name="selectbasic" class="form-control">
                                     <!--        -->
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Multiple Checkboxes Modules -->
-                        <div id="divModules" class="form-group" style="display: none;">
-                            <label class="control-label">Choisissez les modules <span style="text-decoration: underline; font-size: larger;">à exclure</span> du calendrier</label>
-                            <div id="contentModules" class="">
+                        <!-- Multiple Checkboxes Groupes -->
+                        <div id="divGroupes" style="display: none;" class="form-group">
+                            <label class="control-label">Sélectionnez vos groupes</label>
+                            <div id="contentGroupes" class="">
                                 <!--        -->
                             </div>
                         </div>
 
-                        <!-- Checkbox choix de la salle personnalisée d'anglais -->
-                        <div id="divAnglais" class="form-group" style="display: none;">
-                            <label class="control-label" for="checkboxeAnglais">
-                                Salle d'anglais personnalisée ?
-                                <input id="checkboxeAnglais" type="checkbox" style="margin-left: 10px;" onchange='document.getElementById("inputAnglais").disabled = !this.checked;'>
-                            </label>
-                            <div class="">
-                                <input id="inputAnglais" class="form-control" type="number" disabled min="0" style="width: 100px;">
+                        <!-- Multiple Checkboxes Modules -->
+                        <div id="divModules" style="display: none;" class="form-group">
+                            <label class="control-label">Choisissez les modules <span style="text-decoration: underline; font-size: larger;">à exclure</span> du calendrier</label>
+                            <div id="contentModules" class="">
+                                <!--        -->
                             </div>
-                        </div>
-
-                        <!-- Sous-groupes spécifiques au S6 -->
-                        <div id="divSousGroupes" style="display: none;">
-
-                            <!-- Multiple Radios (inline) Groupe BD -->
-                            <div id="divGroupeBD" class="form-group">
-                                <label class="control-label">Quel est votre groupe de BD ?</label>
-                                <div class=""> 
-                                    <label class="radio-inline" for="groupeBD-1">
-                                        <input name="groupeBD" id="groupeBD-1" value="1" checked="checked" type="radio">
-                                        Groupe 1
-                                    </label> 
-                                    <label class="radio-inline" for="groupeBD-2">
-                                        <input name="groupeBD" id="groupeBD-2" value="2" type="radio">
-                                        Groupe 2
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Multiple Radios (inline) Groupe Algo -->
-                            <div id="divGroupeAlgo" class="form-group">
-                                <label class="control-label">Etes vous dans le "groupe 4" d'algo ?</label>
-                                <div class=""> 
-                                    <label class="radio-inline" for="groupeAlgo-4">
-                                        <input name="groupeAlgo" id="groupeAlgo-4" value="4" type="radio">
-                                        Oui
-                                    </label> 
-                                    <label class="radio-inline" for="groupeAlgo-0">
-                                        <input name="groupeAlgo" id="groupeAlgo-0" value="0" checked="checked" type="radio">
-                                        Non
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Multiple Radios (inline) Groupe AS&PP3 -->
-                            <div id="divGroupeAS" class="form-group">
-                                <label class="control-label">Etes vous dans le "groupe 4" d'analyse syntaxique ?</label>
-                                <div class="">
-                                    <label class="radio-inline" for="groupeAS-4">
-                                        <input name="groupeAS" id="groupeAS-4" value="4" type="radio">
-                                        Oui
-                                    </label>
-                                    <label class="radio-inline" for="groupeAS-0">
-                                        <input name="groupeAS" id="groupeAS-0" value="0" checked="checked" type="radio">
-                                        Non
-                                    </label>
-                                </div>
-                            </div>
-
                         </div>
 
                         <!-- Text input Résultat-->
@@ -149,7 +105,7 @@
             <div class="row" style="margin-bottom: 20px;">
                 <!-- Infos... -->
                 <div class="col-md-4" style="text-align: left; font-style: italic; color: #CCCCCC;">
-                    BdxCalendar v1.1 - Alexandre Brouste
+                    BdxCalendar v2.0 - Alexandre Brouste
                 </div>
 
                 <!-- Lien GitHub -->
@@ -159,7 +115,7 @@
 
                 <!-- Référence à HackJack -->
                 <div class="col-md-4" style="text-align: right; font-style: italic; color: #CCCCCC;">
-                    Données provenant de <a href="http://hackjack.info/et/" target="_blank">HackJack</a>
+                    Données provenant de <a href="https://edt-st.u-bordeaux.fr/etudiants/" target="_blank">L'Université de Bordeaux</a>
                 </div>
             </div>
             
