@@ -12,7 +12,7 @@
 composer update
 ```
 
-Link to [Packagist](https://packagist.org/packages/eluceo/ical)
+[Link to Packagist](https://packagist.org/packages/eluceo/ical)
 
 ## Libraries
   - [Bootstrap](https://getbootstrap.com) --> [github](https://github.com/twbs/bootstrap)
