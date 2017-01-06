@@ -79,7 +79,7 @@ else
 				->setDtEnd($dateEnd)
 			    ->setSummary($event->category . " " . implode(" ", $module))
 			    ->setLocation((string)$event->resources->room->item)
-			    ->setDescription($codeModule . "\n" . (string)$event->resources->staff->item . "\nNotes : " . (string)$event->notes)
+			    ->setDescription($codeModule . "\n" . (string)$event->resources->staff->item . "\nGroupes : " . implode(", ", $items) . "\nNotes : " . (string)$event->notes)
 			;
 
 			$calendar->addComponent($vEvent);
