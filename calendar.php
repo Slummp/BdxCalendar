@@ -56,7 +56,7 @@ else
     		array_push($items, (string)$item);
     	}
 
-    	if (!in_array($codeModule, $filtres) && in_array($item, $groupes)) {
+    	if (!in_array($codeModule, $filtres) && in_array($items, $groupes)) {
 	    	$date = explode("/", $event->attributes()->date);
     		$date = new DateTime($date[2] . "-" . $date[1] . "-" . $date[0]);
     		$date->modify('+' . (string)$event->day . ' day');
@@ -85,7 +85,6 @@ else
 			$calendar->addComponent($vEvent);
 		}
 	}
-
 
 	header('Content-Type: text/calendar; charset=utf-8');
 	header('Content-Disposition: attachment; filename="calendar.ics"');
