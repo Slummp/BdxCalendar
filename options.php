@@ -57,6 +57,8 @@ else
 $result = array("Groupes" => $groupes,
                 "Modules" => $modules);
 
+header('Content-Type: application/json');
+
 echo json_encode($result);
 
 ?>
