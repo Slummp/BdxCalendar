@@ -297,7 +297,7 @@ document.getElementById("params").addEventListener("change", function () {
     }
 
     // Ajout du paramètre indiquant si on utilise des heures UTC ou non
-    if (document.getElementById("checkboxUTC")) {
+    if (document.getElementById("checkboxUTC").checked) {
         result.value += "&useUTC=1";
     }
 });
