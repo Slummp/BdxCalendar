@@ -92,9 +92,6 @@ $('#selectSemestre').change(function () {
         // Affichage de la div contenant la liste des formations
         document.getElementById("divFormation").style.display = 'block';
 
-        // Création du contenu de la liste des formations
-        var dataParse = JSON.parse(data);
-
         var selectOption = document.createElement("option");
         selectOption.setAttribute("value", "");
         selectOption.setAttribute("selected", "selected");
@@ -104,14 +101,14 @@ $('#selectSemestre').change(function () {
         document.getElementById("selectFormation").appendChild(selectOption);
         selectOption.innerHTML = "Sélectionnez une formation";
 
-        for (var key in dataParse) {
+        for (var key in data) {
             var selectOption = document.createElement("option");
             selectOption.setAttribute("value", key);
 
             //
 
             document.getElementById("selectFormation").appendChild(selectOption);
-            selectOption.innerHTML = dataParse[key];
+            selectOption.innerHTML = data[key];
         }
     });
 });
@@ -297,7 +294,7 @@ document.getElementById("params").addEventListener("change", function () {
     }
 
     // Ajout du paramètre indiquant si on utilise des heures UTC ou non
-    if (document.getElementById("checkboxUTC")) {
+    if (document.getElementById("checkboxUTC").checked) {
         result.value += "&useUTC=1";
     }
 });
