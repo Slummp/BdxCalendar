@@ -128,9 +128,8 @@ $('#selectFormation').change(function () {
     // Récupération de la liste des groupes et des modules en AJAX
     $.post("options.php", {diplome: dip, semestre: sem, formation: form}, function (data) {
         // Création du contenu de la liste des groupes et des modules
-        var dataParse = JSON.parse(data);
-        var groupes = dataParse["Groupes"];
-        var modules = dataParse["Modules"];
+        var groupes = data["Groupes"];
+        var modules = data["Modules"];
 
         // Groupes
         for (var key in groupes) {
