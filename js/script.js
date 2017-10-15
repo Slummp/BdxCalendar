@@ -235,7 +235,7 @@ document.getElementById("params").addEventListener("change", function () {
     // Ajout du paramètre semestre
     result.value += "semestre=";
     result.value += document.getElementById("selectSemestre").value;
-    
+
     if (result.value.charAt(result.value.length - 1) == "=") {
         result.value = result.value.substring(0, result.value.length - 10);
     }
@@ -245,9 +245,14 @@ document.getElementById("params").addEventListener("change", function () {
     // Ajout du paramètre formation
     result.value += "formation=";
     result.value += document.getElementById("selectFormation").value;
-    
+
     if (result.value.charAt(result.value.length - 1) == "=") {
         result.value = result.value.substring(0, result.value.length - 11);
+    }
+    
+    // Ajout du paramètre indiquant si on utilise des heures UTC ou non
+    if (document.getElementById("checkboxUTC")) {
+      result.value += "&useUTC=1";
     }
 
     // Ajout des groupes (si précisés)
