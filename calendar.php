@@ -73,9 +73,9 @@ else
             $dateEnd->modify('+' . $time[1] . ' minutes');
 
             $vEvent = new \Eluceo\iCal\Component\Event();
-            $vEvent->setUseUtc(false);
             
             $vEvent
+                ->setUseUtc(false)
                 ->setDtStart($dateStart)
                 ->setDtEnd($dateEnd)
                 ->setSummary($event->category . " " . implode(" ", $module))
