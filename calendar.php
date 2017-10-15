@@ -66,14 +66,20 @@ else
             $time = explode(":", (string)$event->starttime);
             $dateStart->modify('+' . $time[0] . ' hours');
             $dateStart->modify('+' . $time[1] . ' minutes');
-            
+
             $dateEnd = clone $date;
             $time = explode(":", (string)$event->endtime);
             $dateEnd->modify('+' . $time[0] . ' hours');
             $dateEnd->modify('+' . $time[1] . ' minutes');
 
             $vEvent = new \Eluceo\iCal\Component\Event();
+<<<<<<< HEAD
             
+=======
+            $useUTC = (isset($_GET['useUTC']) && $_GET['useUTC'] == "1");
+            $vEvent->setUseUtc($useUTC);
+
+>>>>>>> 1aebb38ca54f3a708839cff171fa9de8c06fac35
             $vEvent
                 ->setUseUtc(false)
                 ->setDtStart($dateStart)
