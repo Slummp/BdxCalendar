@@ -249,11 +249,6 @@ document.getElementById("params").addEventListener("change", function () {
     if (result.value.charAt(result.value.length - 1) == "=") {
         result.value = result.value.substring(0, result.value.length - 11);
     }
-    
-    // Ajout du paramètre indiquant si on utilise des heures UTC ou non
-    if (document.getElementById("checkboxUTC")) {
-      result.value += "&useUTC=1";
-    }
 
     // Ajout des groupes (si précisés)
     var groupes = document.getElementsByName('groupes[]');
@@ -299,5 +294,10 @@ document.getElementById("params").addEventListener("change", function () {
         else if (result.value.charAt(result.value.length - 1) == "=") {
             result.value = result.value.substring(0, result.value.length - 9);
         }
+    }
+
+    // Ajout du paramètre indiquant si on utilise des heures UTC ou non
+    if (document.getElementById("checkboxUTC")) {
+        result.value += "&useUTC=1";
     }
 });
